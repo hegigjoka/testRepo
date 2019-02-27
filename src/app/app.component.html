@@ -1,0 +1,8 @@
+<mat-toolbar style="background-color: #323232">
+  <span style="color: white">GitHub Repo's</span>
+  <span style="flex: 1 1 auto"></span>
+  <button mat-raised-button (click)="signIn()" *ngIf="!isLogged">Sign in with Github</button>
+  <ngx-avatar [matTooltip]="user?.login" [src]="user?.avatar_url" matTooltipPosition="below" [name]="user?.login" *ngIf="isLogged"></ngx-avatar>
+</mat-toolbar>
+
+<router-outlet></router-outlet>
