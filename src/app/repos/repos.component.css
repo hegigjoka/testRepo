@@ -1,0 +1,22 @@
+.repo-header{
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  font-size: 20px;
+}
+.repo-header mat-icon{
+  margin-right: 5px;
+}
+.repo-header a, .repo-header div{
+  margin-right: 15px;
+}
+.repo-language{
+  margin-top: 30px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+.repo-language div{
+  width: 10%;
+  font-size: 15px;
+}

@@ -5,29 +5,43 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
-import {MatButtonModule, MatProgressSpinnerModule, MatToolbarModule, MatTooltipModule} from '@angular/material';
+import {
+  MatButtonModule,
+  MatCardModule, MatExpansionModule,
+  MatIconModule, MatProgressBarModule,
+  MatProgressSpinnerModule, MatSidenavModule,
+  MatToolbarModule,
+  MatTooltipModule
+} from '@angular/material';
 import {HttpModule} from '@angular/http';
-import {AppService} from './app.service';
+import {AppService} from './shared/app.service';
 import {RouterModule, Routes} from '@angular/router';
 import { ReposComponent } from './repos/repos.component';
 import { AvatarModule } from 'ngx-avatar';
+import {FilterPipe} from './shared/filter.pipe';
 
 const app: Routes = [
   {
-    path: '',
+    path: 'repos',
     children: [
       {
-        path: 'repos',
+        path: ':repo',
         component: ReposComponent
       }
     ]
+  },
+  {
+    path: '**',
+    redirectTo: '/repos',
+    pathMatch: 'full'
   }
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
-    ReposComponent
+    ReposComponent,
+    FilterPipe
   ],
   imports: [
     BrowserModule,
@@ -39,6 +53,11 @@ const app: Routes = [
     MatButtonModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
+    MatCardModule,
+    MatIconModule,
+    MatProgressBarModule,
+    MatSidenavModule,
+    MatExpansionModule,
     RouterModule.forRoot(app)
   ],
   providers: [AppService],

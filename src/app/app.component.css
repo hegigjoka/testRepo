@@ -1,0 +1,17 @@
+.repo-header{
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  font-size: 18px;
+}
+.repo-header mat-icon{
+  margin-right: 5px;
+}
+.material-icons{
+  font-size: unset;
+}
+a{
+  font-size: 15px;
+  cursor: pointer;
+  text-decoration: underline;
+}

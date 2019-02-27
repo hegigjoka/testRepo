@@ -1,3 +1,14 @@
-<p>
-  repos works!
-</p>
+<mat-card style="width: 70%;margin: 25px auto 25px 330px">
+  <div class="repo-header">
+    <mat-icon>view_day</mat-icon>
+    <a [href]="'https://github.com/' + repos?.full_name">{{repos?.full_name}}</a>
+    <mat-icon>star</mat-icon>
+    <div>{{repos?.stargazers_count}}</div>
+    <mat-icon>share</mat-icon>
+    <div>{{repos?.forks_count}}</div>
+  </div>
+  <div class="repo-language" *ngFor="let lang of objectifyReposLang">
+    <div>{{lang?.name}}</div>
+    <mat-progress-bar mode="determinate" [value]="(lang?.usage/objectifyLangUsage)*100" color="warn"></mat-progress-bar>
+  </div>
+</mat-card>

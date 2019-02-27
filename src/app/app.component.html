@@ -1,8 +1,36 @@
-<mat-toolbar style="background-color: #323232">
-  <span style="color: white">GitHub Repo's</span>
-  <span style="flex: 1 1 auto"></span>
-  <button mat-raised-button (click)="signIn()" *ngIf="!isLogged">Sign in with Github</button>
-  <ngx-avatar [matTooltip]="user?.login" [src]="user?.avatar_url" matTooltipPosition="below" [name]="user?.login" *ngIf="isLogged"></ngx-avatar>
-</mat-toolbar>
+<mat-drawer-container [hasBackdrop]="false">
+  <mat-drawer mode="over" opened>
+    <mat-toolbar color="warn">
+      <span style="color: white">GitHub Repo's</span>
+    </mat-toolbar>
+    <mat-accordion style="width: fit-content">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>All Repo's</mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="repo-header" *ngFor="let repo of repos">
+          <mat-icon>view_day</mat-icon>
+          <a (click)="openRepo(repo?.name)">{{repo?.full_name}}</a>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel *ngIf="likedRepos">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Liked Repo's</mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="repo-header" *ngFor="let repo of repos | filters">
+          <mat-icon>view_day</mat-icon>
+          <a (click)="openRepo(repo?.name)">{{repo?.full_name}}</a>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-drawer>
+  <mat-drawer-content>
+    <mat-toolbar style="background-color: #323232">
+      <span style="flex: 1 1 auto"></span>
+      <button mat-raised-button (click)="signIn()" *ngIf="!isLogged">Sign in with Github</button>
+      <ngx-avatar [matTooltip]="user?.login" [src]="user?.avatar_url" matTooltipPosition="below" [name]="user?.login" *ngIf="isLogged"></ngx-avatar>
+    </mat-toolbar>
 
-<router-outlet></router-outlet>
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

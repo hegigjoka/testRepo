@@ -26,11 +26,11 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET, POST, PATCH, DELETE, OPTIONS"
+    "GET, POST, OPTIONS"
   );
   next();
 });
@@ -51,13 +51,13 @@ app.get('/repos/signin', (req, res, next) => {
     })
     .set('Accept', 'application/json')
     .then((result) => {
-      access_token = result.body;
+      access_token = `token ${result.body.access_token}`;
       res.redirect('http://localhost:4200/repos');
     });
 });
 
 app.get('/repos', (req, res, next) => {
-  const token = access_token.access_token;
+  const token = access_token || req.headers.authorization;
   if (token === '') {
     return res.status(401).json({
       status: 'NOT_AUTHENTICATED'
@@ -65,7 +65,61 @@ app.get('/repos', (req, res, next) => {
   }
   request
     .get('https://api.github.com/user')
-    .set('Authorization', 'token ' + token)
+    .set('Authorization', token)
+    .then((result) => {
+      res.status(200).json({
+        status: 'OK',
+        token: token,
+        data: result.body
+      });
+    });
+});
+
+app.get('/repos/:user', (req, res, next) => {
+  if (req.headers.authorization === undefined) {
+    return res.status(401).json({
+      status: 'NOT_AUTHENTICATED'
+    });
+  }
+  request
+    .get(`https://api.github.com/users/${req.params.user}/repos`)
+    .set('Authorization', req.headers.authorization)
+    .then((result) => {
+      res.status(200).json({
+        status: 'OK',
+        data: result.body
+      });
+    });
+});
+
+app.get('/repos/:user/:repo', (req, res, next) => {
+  if (req.headers.authorization === undefined) {
+    return res.status(401).json({
+      status: 'NOT_AUTHENTICATED'
+    });
+  }
+  request
+    .get(`https://api.github.com/repos/${req.params.user}/${req.params.repo}`)
+    .set('Authorization', req.headers.authorization)
+    .then((result) => {
+      res.status(200).json({
+        status: 'OK',
+        data: result.body
+      });
+    });
+});
+
+app.get('/repos/:user/:repo/languages', (req, res, next) => {
+  const user = req.params.user;
+  const repo = req.params.repo;
+  if (req.headers.authorization === undefined) {
+    return res.status(401).json({
+      status: 'NOT_AUTHENTICATED'
+    });
+  }
+  request
+    .get(`https://api.github.com/repos/${user}/${repo}/languages`)
+    .set('Authorization', req.headers.authorization)
     .then((result) => {
       res.status(200).json({
         status: 'OK',

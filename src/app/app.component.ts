@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {AppService} from './app.service';
+import {AppService} from './shared/app.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -10,20 +11,38 @@ export class AppComponent implements OnInit {
   isLogged: boolean;
   user: any;
 
-  constructor(private app: AppService) {}
+  repos: any[];
+  likedRepos: boolean;
+
+  constructor(private app: AppService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
     if (window.location.href.match(/\/repos/)) {
       this.isLogged = true;
       this.getUserInf();
+      setTimeout(() => {
+        this.getRepositories();
+      }, 600);
     }
   }
 
   getUserInf() {
     this.app.getUserInfo().subscribe((response) => {
+      localStorage.setItem('user', response.json().data.login);
+      localStorage.setItem('token', response.json().token);
       this.user = response.json().data;
-      console.log(this.user);
     });
+  }
+
+  getRepositories() {
+    this.app.getRepos(localStorage.getItem('user')).subscribe((response) => {
+      this.repos = response.json().data;
+      this.likedRepos = true;
+    });
+  }
+
+  openRepo(repo: string) {
+    this.router.navigate(['/repos', repo]);
   }
 
   signIn() {
